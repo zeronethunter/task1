@@ -16,7 +16,7 @@ jobs:
     needs: [ check ]
     steps:
       - uses: actions/checkout@v2
-      - run: make build
+      - run: make build_off_sanitizers
   valgrind:
     runs-on: ubuntu-latest
     container: zeronethunter/task1
