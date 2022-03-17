@@ -40,4 +40,6 @@ char *input_string(FILE *file);
 
 int input_int(FILE *file);
 
+char input_char(FILE *file);
+
 #endif  // SUBNET_LIB_SUBNET_H_

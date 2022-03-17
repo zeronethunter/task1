@@ -13,6 +13,7 @@ TEST(InputTest, RightTest) {
 
   FILE *std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
   unsigned int *subnet = input_ip(std_in_f, 4);
+  fclose(std_in_f);
 
   EXPECT_FALSE(!subnet);
 
@@ -21,16 +22,18 @@ TEST(InputTest, RightTest) {
   const char *dns = "mr.robot.ru";
 
   std_in = "192\n168\n1\n1\n";
-  std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
 
+  std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
   unsigned int *ip = input_ip(std_in_f, 4);
+  fclose(std_in_f);
 
   EXPECT_FALSE(!ip);
 
   std_in = "255\n255\n255\n0\n";
-  std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
 
+  std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
   unsigned int *mask = input_ip(std_in_f, 4);
+  fclose(std_in_f);
 
   EXPECT_FALSE(!mask);
 
@@ -41,8 +44,6 @@ TEST(InputTest, RightTest) {
       Server_new((char *)dns, ip, mask, thread_count, core_count);
 
   EXPECT_FALSE(!new_subnet->servers);
-
-  fclose(std_in_f);
 
   if (ip) {
     free(ip);
@@ -97,24 +98,25 @@ TEST(InputTest, WrongTest) {
 }
 
 TEST(InputTest, InputFuncTest) {
-  const char *std_in = "123s123";
+  const char *std_in = "123s123\n";
+
   FILE *std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
   EXPECT_FALSE(input_int(std_in_f));
+  fclose(std_in_f);
 
   std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
-
   char *tmp_string = input_string(std_in_f);
+  fclose(std_in_f);
+
   EXPECT_EQ(strcmp("123s123", tmp_string), 0);
 
   std_in = "256\n168\n1\n0\n";
 
   std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
-
   unsigned int *ip = input_ip(std_in_f, 4);
+  fclose(std_in_f);
 
   EXPECT_FALSE(ip);
-
-  fclose(std_in_f);
 
   free(tmp_string);
   free(ip);

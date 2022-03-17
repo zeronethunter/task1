@@ -23,7 +23,7 @@ Server *Server_new(char *_dns, unsigned int *_ip, unsigned int *_mask,
 int input_int(FILE *file) {
   int c = 0;
   int result = 0;
-  while (c = getc(file), c != EOF && c != '\n') {
+  while (c = fgetc(file), c != EOF && c != '\n') {
     if (!(c >= '0' && c <= '9')) {
       char *buf = input_string(file); /* Read to the end of the string */
       if (buf) {
