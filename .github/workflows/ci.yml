@@ -1,8 +1,5 @@
 on: push
 
-env:
-  BUILD_DIR: build
-
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -26,6 +23,8 @@ jobs:
       - run: make valgrind
   sanitizers:
     runs-on: ubuntu-latest
+    env:
+      BUILD_DIR: build
     container: zeronethunter/task1
     needs: [ build ]
     steps:
@@ -35,4 +34,4 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          path: $BUILD_DIR/report/
+          path: env.BUILD_DIR/report
