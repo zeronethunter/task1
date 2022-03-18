@@ -1,0 +1,37 @@
+on: push
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container: zeronethunter/task1
+    steps:
+      - uses: actions/checkout@v2
+      - run: make check
+  build:
+    runs-on: ubuntu-latest
+    container: zeronethunter/task1
+    needs: [ check ]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make build_off_sanitizers
+  valgrind:
+    runs-on: ubuntu-latest
+    container: zeronethunter/task1
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make valgrind
+  sanitizers:
+    runs-on: ubuntu-latest
+    env:
+      BUILD_DIR: build
+    container: zeronethunter/task1
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make sanitizers
+      - run: make coverage
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: build/report
