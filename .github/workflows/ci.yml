@@ -34,4 +34,4 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          path: env.BUILD_DIR/report
+          path: build/report

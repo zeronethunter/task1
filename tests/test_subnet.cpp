@@ -4,7 +4,7 @@ extern "C" {
 #include "Subnet.h"
 }
 
-TEST(InputTest, RightTest) {
+TEST(ServerCreationTest, RightTest) {
   // cppcheck-suppress cstyleCast
   auto *new_subnet = (Subnet *)malloc(sizeof(Subnet));
   new_subnet->size = 1;
@@ -45,22 +45,14 @@ TEST(InputTest, RightTest) {
 
   EXPECT_FALSE(!new_subnet->servers);
 
-  if (ip) {
-    free(ip);
-  }
-  if (mask) {
-    free(mask);
-  }
-  if (new_subnet->servers) {
-    free(new_subnet->servers);
-  }
-  if (new_subnet->subnet) {
-    free(new_subnet->subnet);
-  }
+  free(ip);
+  free(mask);
+  free(new_subnet->servers);
+  free(new_subnet->subnet);
   free(new_subnet);
 }
 
-TEST(InputTest, WrongTest) {
+TEST(ServerCreationTest, WrongTest) {
   unsigned int wrong_thread_count = 0;
   unsigned int wrong_core_count = 0;
   auto *ip = (unsigned int *)malloc(sizeof(unsigned int) * 4);
@@ -97,27 +89,34 @@ TEST(InputTest, WrongTest) {
   free(new_server);
 }
 
-TEST(InputTest, InputFuncTest) {
+TEST(InputTest, InputInt) {
   const char *std_in = "123s123\n";
 
   FILE *std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
   EXPECT_FALSE(input_int(std_in_f));
-  fclose(std_in_f);
 
-  std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
+  fclose(std_in_f);
+}
+
+TEST(InputTest, InputString) {
+  const char *std_in = "123s123\n";
+
+  FILE *std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
   char *tmp_string = input_string(std_in_f);
-  fclose(std_in_f);
-
   EXPECT_EQ(strcmp("123s123", tmp_string), 0);
 
-  std_in = "256\n168\n1\n0\n";
-
-  std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
-  unsigned int *ip = input_ip(std_in_f, 4);
   fclose(std_in_f);
+  free(tmp_string);
+}
+
+TEST(InputTest, InputIP) {
+  const char *std_in = "256\n168\n1\n0\n";
+
+  FILE *std_in_f = fmemopen((char *)std_in, strlen(std_in), "r");
+  unsigned int *ip = input_ip(std_in_f, 4);
 
   EXPECT_FALSE(ip);
 
-  free(tmp_string);
+  fclose(std_in_f);
   free(ip);
 }

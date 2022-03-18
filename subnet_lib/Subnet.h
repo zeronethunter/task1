@@ -8,22 +8,19 @@
 #ifndef SUBNET_LIB_SUBNET_H_
 #define SUBNET_LIB_SUBNET_H_
 
-typedef struct Server Server;
-typedef struct Subnet Subnet;
-
-struct Server {
+typedef struct {
   char *dns;
   unsigned int *ip;
   unsigned int *mask;
   unsigned int thread_count;
   unsigned int core_count;
-};
+} Server;
 
-struct Subnet {
+typedef struct {
   unsigned int *subnet;
   unsigned int size;
   Server *servers;
-};
+} Subnet;
 
 Server *Server_new(char *_dns, unsigned int *_ip, unsigned int *_mask,
                    unsigned int _thread_count, unsigned int _core_count);
@@ -39,7 +36,5 @@ void print_ip(const unsigned int *ip, size_t n);
 char *input_string(FILE *file);
 
 int input_int(FILE *file);
-
-char input_char(FILE *file);
 
 #endif  // SUBNET_LIB_SUBNET_H_

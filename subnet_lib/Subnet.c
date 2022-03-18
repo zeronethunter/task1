@@ -12,6 +12,10 @@ Server *Server_new(char *_dns, unsigned int *_ip, unsigned int *_mask,
   }
   Server *new_server = (Server *)malloc(sizeof(Server));
 
+  if (!new_server) {
+    return NULL;
+  }
+
   new_server->dns = _dns;
   new_server->ip = _ip;
   new_server->mask = _mask;
@@ -21,14 +25,15 @@ Server *Server_new(char *_dns, unsigned int *_ip, unsigned int *_mask,
 }
 
 int input_int(FILE *file) {
+  if (!file) {
+    return 0;
+  }
   int c = 0;
   int result = 0;
   while (c = fgetc(file), c != EOF && c != '\n') {
     if (!(c >= '0' && c <= '9')) {
       char *buf = input_string(file); /* Read to the end of the string */
-      if (buf) {
-        free(buf);
-      }
+      free(buf);
       return 0;
     }
     // NOLINTNEXTLINE (*-magic-numbers)
@@ -38,6 +43,9 @@ int input_int(FILE *file) {
 }
 
 char *input_string(FILE *file) {
+  if (!file) {
+    return NULL;
+  }
   char c = 0;
   size_t size = 1;
   size_t len = 0;
@@ -83,10 +91,16 @@ unsigned int *input_ip(FILE *file, size_t n) {
     }
     ip[i] = num;
   }
+  if (!ip) {
+    return NULL;
+  }
   return ip;
 }
 
 void print_ip(const unsigned int *ip, size_t n) {
+  if (!ip) {
+    return;
+  }
   for (size_t i = 0; i < n - 1; ++i) {
     printf("%u.", ip[i]);
   }
@@ -94,6 +108,9 @@ void print_ip(const unsigned int *ip, size_t n) {
 }
 
 void print_server(const Server *server) {
+  if (!server) {
+    return;
+  }
   printf("%s: %s\n", "DNS", server->dns);
 
   printf("%s: ", "ip");
@@ -108,6 +125,9 @@ void print_server(const Server *server) {
 }
 
 void print_subnet(const Subnet *subnet) {
+  if (!subnet) {
+    return;
+  }
   for (int i = 0; i < subnet->size; ++i) {
     printf("%d)\n", i + 1);
     print_server(&subnet->servers[i]);
